@@ -1,0 +1,10 @@
+00-data/*
+00-reads/*
+01-gstacks/*
+02-bcftools_call/*
+03-vcftools_filter/*
+04-bcftools_merge/*
+05-genomic_pi/*
+logs/*
+.snakemake/
+*.log

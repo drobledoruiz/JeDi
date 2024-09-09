@@ -1,0 +1,35 @@
+ref_genome: "MY_DIR/MY_REFGENOME.fasta"
+pop_index: "MY_DIR/MY_POPFILE.tsv"
+reads_dir: "MY_DIR/MY_READS/"
+threads: 30
+gstacks:
+  input_dir: "00-reads/"
+  output_dir: "01-gstacks/"
+  logs: "logs/01-gstacks.log"
+  min_map_quality: 30
+fasta2bed:
+  dir_script: "scripts/"
+  dir_stacks: "01-gstacks/"
+  logs: "logs/01-fasta2bed.log"
+bcftools_call:
+  output_dir: "02-bcftools_call/"
+  logs: "logs/02-bcftools_call_"
+vcftools_filter:
+  output_dir: "03-vcftools_filter/"
+  logs: "logs/03-vcftools_filter_"
+  minDP: 10
+bcftools_sort:
+  logs: "logs/03-bcftools_sort_"
+bcftools_merge:
+  output_dir: "04-bcftools_merge/"
+  logs: "logs/04-bcftools_"
+bfctools_reheader:
+  output_dir: "04-bcftools_merge/"
+piawka:
+  script_dir: scripts/piawka/
+  output_dir: "05-genomic_pi/"
+  log_pi:  "logs/05-piawka_pi_dxy_fst.log"
+  log_het: "logs/05-piawka_het.log"
+piawka_agg:
+  output_dir: "05-genomic_pi/"
+  logs: "logs/06-piawka_agg_"
