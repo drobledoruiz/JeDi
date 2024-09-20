@@ -1,7 +1,7 @@
 #######################################################################################
 rule get_singletons:
 	input:
-		config['bcftools_merge']['output_dir']  + 'all_merged.vcf.gz'
+		config['bcftools_merge']['output_dir']  + 'all_merged_names.vcf.gz'
 	output:
 		config['python_filter']['output_dir'] + 'all_merged_names.singletons'
 	log:
@@ -14,15 +14,34 @@ rule get_singletons:
 #######################################################################################
 rule filter_singletons:
 	input:
-		vcf  = config['bcftools_merge']['output_dir']  + 'all_merged.vcf.gz',
+		vcf  = config['bcftools_merge']['output_dir']  + 'all_merged_names.vcf.gz',
 		sing = config['python_filter']['output_dir'] + 'all_merged_names.singletons'
 	output:
-		config['python_filter']['output_dir'] + 'all_merged_names_filtered.vcf.gz'
+		head = config['python_filter']['output_dir']  + 'temp.header',
+		temp = config['python_filter']['output_dir']  + 'temp.file',
 	log:
 		config['python_filter']['log']
 	params:
-		file = config['python_filter']['output_dir'] + 'all_merged_names_filtered.vcf'
+		old_vcf = config['bcftools_merge']['output_dir']  + 'all_merged_names.vcf',
 	shell:
-		"python scripts/02-filter_singletons.py -v {input.vcf} -o {params.file} -s {input.sing} -g 2>>{log} && "
-		"bgzip {params.file} 2>>{log} && "
-		"bcftools index {output}"
+		"bgzip -d -k -f {input.vcf} && "
+		"python scripts/02-filter_singletons.py -v {params.old_vcf} -o {output.temp} -s {input.sing} 2>>{log} && "
+		"rm {params.old_vcf}"
+	
+#########################################################################################	
+rule create_filltered_vcf:
+	input:
+		head = config['python_filter']['output_dir']  + 'temp.header',
+		temp = config['python_filter']['output_dir']  + 'temp.file',
+	output:
+		config['python_filter']['output_dir'] + 'all_merged_names_filtered.vcf.gz'
+	params:
+		new_file = config['python_filter']['output_dir'] + 'all_merged_names_filtered.vcf',
+	shell:
+		"cat {input.head} > {params.new_file} && cat {input.temp} >> {params.new_file} && "
+		"bgzip {params.new_file} && "
+		"bcftools index {output} && "
+		"rm {input.head} {input.temp}"
+ 
+				
+		

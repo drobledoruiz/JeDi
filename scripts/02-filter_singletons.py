@@ -3,24 +3,34 @@ import gzip as gz
 import argparse
 
 
-def io_header(ivcf_path, ovcf_path, gzip=True,):
+def write_header(ivcf_path, ovcf_path, gzip=True,):
     ifile = gz.open(ivcf_path, "rt") if gzip else open(ivcf_path, "rt")
     ofile = open(ovcf_path, "wt")
     with ifile:
         with ofile:
             for line in ifile:
                 if line.startswith("#CHROM"):
-                    vcf_names = [x for x in line.split('\t')]
                     break
                 else:
                     ofile.write(line)
     ifile.close()
     ofile.close()
+    return
+
+
+def get_names(ivcf_path,  gzip=True,):
+    ifile = gz.open(ivcf_path, "rt") if gzip else open(ivcf_path, "rt")
+    with ifile:
+        for line in ifile:
+            if line.startswith("#CHROM"):
+                vcf_names = [x for x in line.split('\t')]
+                break
+    ifile.close()
     return [x.split('\n')[0] if '\n' in x else x for x in vcf_names]
 
 
 def filter_singletons_vcf(vcf_path, out_vcf_path, singletons_path, gzip=True):
-    names = io_header(vcf_path,out_vcf_path,gzip=gzip,) 
+    names = get_names(vcf_path,gzip=gzip,) 
     inds = names[names.index('FORMAT')+1:]
 
     if(gzip):
@@ -45,9 +55,7 @@ def filter_singletons_vcf(vcf_path, out_vcf_path, singletons_path, gzip=True):
                 .otherwise(pl.col(row[2]))
                 .alias(row[2])
                 )
-    ofile = open(out_vcf_path, "at")
-    with ofile:
-        df.collect().write_csv(ofile,separator="\t" ) 
+    df.sink_csv(out_vcf_path,separator="\t" ) 
     return True
 
 if __name__ == '__main__':
@@ -60,3 +68,4 @@ if __name__ == '__main__':
     args = vars(parser.parse_args())
     # Call the function
     filter_singletons_vcf(args['vcf'], args['output'], args['singletons'], gzip=args['gzip'])
+    write_header(args['vcf'], args['output'].split('.')[0]+'.header', gzip=args['gzip'])
