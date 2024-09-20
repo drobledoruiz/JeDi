@@ -4,7 +4,8 @@
 02-bcftools_call/*
 03-vcftools_filter/*
 04-bcftools_merge/*
-05-genomic_pi/*
+05-python_filter/*
+06-genomic_dicersity/*
 logs/*
 .snakemake/
 *.log
