@@ -5,7 +5,7 @@
 03-vcftools_filter/*
 04-bcftools_merge/*
 05-python_filter/*
-06-genomic_dicersity/*
+06-genomic_diversity/*
 logs/*
 .snakemake/
 *.log

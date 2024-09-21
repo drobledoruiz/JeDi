@@ -33,6 +33,8 @@ def filter_singletons_vcf(vcf_path, out_vcf_path, singletons_path, gzip=True):
     names = get_names(vcf_path,gzip=gzip,) 
     inds = names[names.index('FORMAT')+1:]
 
+    write_header(vcf_path,out_vcf_path, gzip=args['gzip'])
+
     if(gzip):
         # Reads (in-memory) vcf file
         with gz.open(vcf_path, "rt") as f:   
@@ -46,6 +48,8 @@ def filter_singletons_vcf(vcf_path, out_vcf_path, singletons_path, gzip=True):
     df = df.rename(dict(zip(cols,names)))
    
     dfs = pl.read_csv(singletons_path,separator="\t").rename({"CHROM": "#CHROM"}).drop(["ALLELE","SINGLETON/DOUBLETON"])
+    my_indv = vcf_path.split('.')[0]
+    dfs = dfs.filter(pl.col('INDV')==my_indv)
 
     for row in dfs.iter_rows():
         df = df.with_columns(
@@ -55,7 +59,9 @@ def filter_singletons_vcf(vcf_path, out_vcf_path, singletons_path, gzip=True):
                 .otherwise(pl.col(row[2]))
                 .alias(row[2])
                 )
-    df.sink_csv(out_vcf_path,separator="\t" ) 
+    
+    with open(out_vcf_path, "at") as  ofile:
+        df.collect().write_csv(ofile,separator="\t" ) 
     return True
 
 if __name__ == '__main__':
@@ -68,4 +74,3 @@ if __name__ == '__main__':
     args = vars(parser.parse_args())
     # Call the function
     filter_singletons_vcf(args['vcf'], args['output'], args['singletons'], gzip=args['gzip'])
-    write_header(args['vcf'], args['output'].split('.')[0]+'.header', gzip=args['gzip'])
