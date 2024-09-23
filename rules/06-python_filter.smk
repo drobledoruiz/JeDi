@@ -60,6 +60,10 @@ for i in range(len(subfiles)):
 		for line in subset_vcf[i]:
 			file.write(ndir + line + '.sort.vcf.gz\n')
 
+with open(ndir + 'merge.txt', "w") as file:
+	for i in range(len(subfiles)):
+		file.write(ndir + f'merge.{i}.vcf.gz\n')
+
 ###############################################################################	
 rule bcftools_submerge2:
 	input:
@@ -77,7 +81,7 @@ rule bcftools_submerge2:
 rule bcftools_merge2:
 	input:
 		files = expand(config['python_filter']['output_dir'] + 'merge.{i}.vcf.gz', i=[i for i in range(len(subfiles))]),
-		names = odir + 'merge.txt',		
+		names = ndir + 'merge.txt',		
 	output:
 		ndir + 'all_merged_filtered.vcf.gz'
 	log:
