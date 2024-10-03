@@ -1,39 +1,33 @@
 import polars as pl
 import gzip as gz
 import argparse
+import os
 
+class MyException(Exception):
+    pass
 
 def write_header(ivcf_path, ovcf_path, gzip=True,):
     ifile = gz.open(ivcf_path, "rt") if gzip else open(ivcf_path, "rt")
     ofile = open(ovcf_path, "wt")
+    counter = 0
+    nl = int(os.popen(f'zcat {ivcf_path} | wc -l').read())
     with ifile:
         with ofile:
             for line in ifile:
+                counter +=1
                 if line.startswith("#CHROM"):
+                    vcf_names = [x for x in line.split('\t')]
+                    if (nl == counter):
+                        ofile.write(line)
+                        raise MyException("VCF file is empty")
                     break
                 else:
                     ofile.write(line)
-    ifile.close()
-    ofile.close()
-    return
-
-
-def get_names(ivcf_path,  gzip=True,):
-    ifile = gz.open(ivcf_path, "rt") if gzip else open(ivcf_path, "rt")
-    with ifile:
-        for line in ifile:
-            if line.startswith("#CHROM"):
-                vcf_names = [x for x in line.split('\t')]
-                break
-    ifile.close()
     return [x.split('\n')[0] if '\n' in x else x for x in vcf_names]
 
-
 def filter_singletons_vcf(vcf_path, out_vcf_path, singletons_path, gzip=True):
-    names = get_names(vcf_path,gzip=gzip,) 
+    names = write_header(vcf_path,out_vcf_path, gzip=gzip)
     inds = names[names.index('FORMAT')+1:]
-
-    write_header(vcf_path,out_vcf_path, gzip=args['gzip'])
 
     if(gzip):
         # Reads (in-memory) vcf file
@@ -73,4 +67,8 @@ if __name__ == '__main__':
 
     args = vars(parser.parse_args())
     # Call the function
-    filter_singletons_vcf(args['vcf'], args['output'], args['singletons'], gzip=args['gzip'])
+    try:
+        filter_singletons_vcf(args['vcf'], args['output'], args['singletons'], gzip=args['gzip'])
+    except Exception as e:
+        print(f"## An exception occurred in {args['vcf']}")
+        print(e)

@@ -26,6 +26,7 @@ bcftools_merge:
 python_filter:
   output_dir: "05-python_filter/"
   logs: "logs/05-python_"
+  mac: 1   # Set to include only sites with Minor Allele Count greater than or equal to mac
 piawka:
   script_dir: scripts/piawka/
   output_dir: "06-genomic_diversity/"

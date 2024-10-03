@@ -9,9 +9,10 @@ rule get_singletons:
 	log:
 		config['bcftools_merge']['logs'] + 'all_merged.log'
 	params:
-		file = config['python_filter']['output_dir']  + 'all_merged'
+		file = config['python_filter']['output_dir']  + 'all_merged',
+		mac = config['python_filter']['mac'] 
 	shell:
-		"vcftools --gzvcf {input} --min-alleles 2 --mac 2 --max-mac 2 --singletons --out {params.file} 2>>{log}"
+		"vcftools --gzvcf {input} --min-alleles 2 --mac {params.mac} --max-mac 2 --singletons --out {params.file} 2>>{log}"
 
 
 #######################################################################################	
@@ -27,11 +28,10 @@ if os.path.isfile(singletons):
 		if x not in inds:
 			ovcf = config['vcftools_filter']['output_dir'] + x + '.sort.vcf.gz'
 			svcf = config['python_filter']['output_dir']   + x + '.sort.vcf.gz'
-			if not os.path.islink(sbam):
+			if not os.path.islink(svcf):
 				os.symlink( ovcf, svcf)
-			if not os.path.islink(sbam + '.tbi'):
-				os.symlink( ovcf + '.tbi', svcf + '.tbi')
-odir = config['bcftools_merge']['output_dir'] 
+			if not os.path.islink(svcf + '.tbi'):
+				os.symlink( ovcf + '.tbi', svcf + '.tbi') 
 ndir = config['python_filter']['output_dir']
 
 ##################################################################################
