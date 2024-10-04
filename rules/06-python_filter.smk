@@ -33,6 +33,7 @@ if os.path.isfile(singletons):
 			if not os.path.islink(svcf + '.tbi'):
 				os.symlink( ovcf + '.tbi', svcf + '.tbi') 
 ndir = config['python_filter']['output_dir']
+print(f'Filtering single/double-tons for the next {len(inds)}:',inds)
 
 ##################################################################################
 rule filter_singletons:
@@ -48,7 +49,7 @@ rule filter_singletons:
 	threads: 100
 	shell:
 		"python scripts/02-filter_singletons.py -v {input.vcf} "
-		"   -o {params.new_vcf} -s {input.sing} -g 2>>{log} && "
+		"   -o {params.new_vcf} -s {input.sing} -gz -n {xyz} 2>>{log} && "
 		"bgzip {params.new_vcf} && "
 		"bcftools index -t {output}" 
 	
