@@ -13,9 +13,8 @@ rule piawka_pi:
 	log:
 		config['piawka']['log_pi']
 	shell:
-		'export PATH="{params}:$PATH" && '
-		'bash {params}piawka_par.sh -a "-j {threads}"  -b {input.bed} -g {input.poi} -v {input.vcf} '
-		'-p "MULT=1 FST=1 DXY=1 PIXY=1 VERBOSE=1" 2>{log} 1>{output}'
+		"bash {params}piawka_par.sh -a '-j {threads}' -b {input.bed} -g {input.poi} "
+		"-v {input.vcf} -p 'MULT=1 FST=1 DXY=1 PIXY=1 VERBOSE=1' 2>{log} 1>{output}"
 
 
 #######################################################################################
@@ -31,5 +30,5 @@ rule piawka_agg_pi:
 	log:
 		config['piawka_agg']['logs'] + 'pi_dxy.log'
 	shell:
-		'python scripts/04-genomic_piawka_pi_dxy_fst.py {input} 2>{log}'
+		"python scripts/04-genomic_piawka_pi_dxy_fst.py {input} 2>{log}"
 

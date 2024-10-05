@@ -1,7 +1,7 @@
-ref_genome: "/home/xuxos/github/data/DU_Maus_v1.0_HiC.fasta"
-pop_index: "/home/xuxos/github/data/id_pop.txt"
-reads_dir: "/home/xuxos/github/data/"
-threads: 4
+ref_genome: "/mnt/market/MP_Genome/DU_Maus_v1.0_HiC.fasta"
+pop_index: "/mnt/market/MP_DART/ascertainment/id_pop.txt"
+reads_dir: "/mnt/market/MP_DART/reads/4.samtools_viewsort/"
+threads: 30
 gstacks:
   input_dir: "00-reads/"
   output_dir: "01-gstacks/"
@@ -17,7 +17,7 @@ bcftools_call:
 vcftools_filter:
   output_dir: "03-vcftools_filter/"
   logs: "logs/03-vcftools_filter_"
-  minDP: 10
+  minDP: 15
 bcftools_sort:
   logs: "logs/03-bcftools_sort_"
 bcftools_merge:

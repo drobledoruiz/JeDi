@@ -11,6 +11,6 @@ rule fasta2bed:
 		bed = config['fasta2bed']['dir_stacks'] + 'catalog.bed',
 		sorted_bed = config['fasta2bed']['dir_stacks'] + 'catalog_sorted.bed',
 	shell:
-		'python3 {params.pyscript} {input} {params.bed} 2>{log} && '
-		'sortBed -i {params.bed} 1>{params.sorted_bed} 2>>{log} && '
-		'mergeBed -i {params.sorted_bed} 1>{output}'
+		"python3 {params.pyscript} {input} {params.bed} 2>{log} && "
+		"sortBed -i {params.bed} 1>{params.sorted_bed} 2>>{log} && "
+		"mergeBed -i {params.sorted_bed} 1>{output}"
