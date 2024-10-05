@@ -1,6 +1,6 @@
 ref_genome: "/path_to/my_ref_genome.fasta"
 pop_index: "/path_to//id_pop.tsv"
-reads_dir: "/path_to/my_reads/
+reads_dir: "/path_to/my_reads/"
 threads: 30
 gstacks:
   input_dir: "00-reads/"
