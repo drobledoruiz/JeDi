@@ -10,6 +10,7 @@ dependencies:
   - bedtools >=2.27
   - mawk >= 1.3.4
   - graphviz
+  - piawka
   - pip
   - pip:
     - polars

@@ -22,7 +22,7 @@ include: "rules/02-bcftools_call.smk"
 include: "rules/03-vcftools_filter.smk"
 include: "rules/04-bcftools_sort.smk"
 include: "rules/05-bcftools_merge.smk"
-include: "rules/06-reheader.smk"
+include: "rules/06-python_filter.smk"
 include: "rules/07-piawka_het.smk"
 include: "rules/08-piawka_pi.smk"
 

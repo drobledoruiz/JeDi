@@ -2,7 +2,7 @@
 rule piawka_pi:
 	input:
 		bed = config['fasta2bed']['dir_stacks'] + 'catalog_sorted_merged.bed',
-		vcf = config['bfctools_reheader']['output_dir']  + 'all_merged_names.vcf.gz',
+		vcf = config['python_filter']['output_dir']  + 'all_merged_filtered.vcf.gz',
 		poi = config['piawka']['output_dir']  + 'ids_filtered.tsv'
 	output:
 		config['piawka']['output_dir']  + 'piawka_pi_dxy_fst.tsv'
@@ -13,9 +13,8 @@ rule piawka_pi:
 	log:
 		config['piawka']['log_pi']
 	shell:
-		'export PATH="{params}:$PATH" && '
-		'bash {params}piawka_par.sh -a "-j {threads}"  -b {input.bed} -g {input.poi} -v {input.vcf} '
-		'-p "MULT=1 FST=1 DXY=1 PIXY=1 VERBOSE=1" 2>{log} 1>{output}'
+		"bash {params}piawka_par.sh -a '-j {threads}' -b {input.bed} -g {input.poi} "
+		"-v {input.vcf} -p 'MULT=1 FST=1 DXY=1 PIXY=1 VERBOSE=1' 2>{log} 1>{output}"
 
 
 #######################################################################################
@@ -31,5 +30,5 @@ rule piawka_agg_pi:
 	log:
 		config['piawka_agg']['logs'] + 'pi_dxy.log'
 	shell:
-		'python scripts/03-genomic_piawka_pi_dxy_fst.py {input} 2>{log}'
+		"python scripts/04-genomic_piawka_pi_dxy_fst.py {input} 2>{log}"
 

@@ -1,4 +1,10 @@
-# snakemake_pi
+	       __   _______  _______   __  
+	      |  | |   ____||       \ |  | 
+	      |  | |  |__   |  .--.  ||  | 
+	.--.  |  | |   __|  |  |  |  ||  | 
+	|  `--'  | |  |____ |  '--'  ||  | 
+	 \______/  |_______||_______/ |__| 
+                                    
 An Snakemake pipeline for unbiased population metrics
 
 1. [Requirements](#requirements)

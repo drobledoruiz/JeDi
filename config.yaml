@@ -1,6 +1,6 @@
-ref_genome: "MY_DIR/MY_REFGENOME.fasta"
-pop_index: "MY_DIR/MY_POPFILE.tsv"
-reads_dir: "MY_DIR/MY_READS/"
+ref_genome: "/path_to/my_ref_genome.fasta"
+pop_index: "/path_to//id_pop.tsv"
+reads_dir: "/path_to/my_reads/
 threads: 30
 gstacks:
   input_dir: "00-reads/"
@@ -17,19 +17,21 @@ bcftools_call:
 vcftools_filter:
   output_dir: "03-vcftools_filter/"
   logs: "logs/03-vcftools_filter_"
-  minDP: 10
+  minDP: 15
 bcftools_sort:
   logs: "logs/03-bcftools_sort_"
 bcftools_merge:
   output_dir: "04-bcftools_merge/"
   logs: "logs/04-bcftools_"
-bfctools_reheader:
-  output_dir: "04-bcftools_merge/"
+python_filter:
+  output_dir: "05-python_filter/"
+  logs: "logs/05-python_"
+  mac: 1   # Set to include only sites with Minor Allele Count greater than or equal to mac
 piawka:
   script_dir: scripts/piawka/
-  output_dir: "05-genomic_pi/"
-  log_pi:  "logs/05-piawka_pi_dxy_fst.log"
-  log_het: "logs/05-piawka_het.log"
+  output_dir: "06-genomic_diversity/"
+  log_pi:  "logs/06-piawka_pi_dxy_fst.log"
+  log_het: "logs/06-piawka_het.log"
 piawka_agg:
-  output_dir: "05-genomic_pi/"
-  logs: "logs/06-piawka_agg_"
+  output_dir: "06-genomic_diversity/"
+  logs: "logs/07-piawka_agg_"
