@@ -19,7 +19,7 @@ rule get_singletons:
 		config['bcftools_merge']['output_dir']  + 'all_merged.vcf.gz'
 	output:
 		ndir + 'all_merged.singletons'
-		log:
+	log:
 		config['bcftools_merge']['logs'] + 'all_merged.log'
 	params:
 		file = ndir + 'all_merged',
@@ -39,7 +39,7 @@ rule filter_singletons:
 	log:
 		config['python_filter']['logs'] + "{xyz}.log"
 	params:
-		ndir  + "{xyz}.sort.vcf",
+		new_vcf = ndir  + "{xyz}.sort.vcf",
 	shell:
 		"python scripts/02-filter_singletons.py -v {input.vcf} "
 		"-o {params.new_vcf} -s {input.sing} -gz -n {wildcards.xyz} 2>>{log} "
