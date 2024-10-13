@@ -8,7 +8,7 @@ def parse_piawka_het(input_filename,pop_filename):
     if '/' in input_filename:
         wdir +=  '/'
     output_het_filename = wdir + 'genomic_het_table.tsv'
-    output_pop_filename = wdir + 'ids_filtered.tsv'
+    output_pop_filename = wdir + 'ids_kept.tsv'
     output_het_re_fname = wdir + 'ids_removed.tsv'
 
     schema={'column_1':pl.String, 'column_2':pl.Int32, 'column_3':pl.String,

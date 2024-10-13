@@ -3,7 +3,7 @@ rule piawka_pi:
 	input:
 		bed = config['fasta2bed']['dir_stacks'] + 'catalog_sorted_merged.bed',
 		vcf = config['python_filter']['output_dir']  + 'all_merged_filtered.vcf.gz',
-		poi = config['piawka']['output_dir']  + 'ids_filtered.tsv'
+		poi = config['piawka']['output_dir']  + 'ids_kept.tsv'
 	output:
 		config['piawka']['output_dir']  + 'piawka_pi_dxy_fst.tsv'
 	params:

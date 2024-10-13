@@ -23,7 +23,7 @@ rule piawka_agg_het:
 		poi = config['pop_index']
 	output:
 		config['piawka_agg']['output_dir']  + 'genomic_het_table.tsv',
-		config['piawka']['output_dir']  + 'ids_filtered.tsv'
+		config['piawka']['output_dir']  + 'ids_kept.tsv'
 	log:
 		config['piawka_agg']['logs'] + 'het.log'
 	shell:
