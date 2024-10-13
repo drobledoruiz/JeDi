@@ -9,7 +9,9 @@ An Snakemake pipeline to calculate unbiased genetic diversity metrics: individua
 
 1. [Requirements](#requirements)
 2. [Installation](#installation)
-3. [Running the pipeline](#running)
+3. [Running JeDi](#running)
+4. [JeDi output](#output)
+5. [Contact](#contact)
 
 <img src="dag.svg " width="1000" height="550" />
 
@@ -122,7 +124,7 @@ mamba deactivate
 
 
 
-## JeDi outputs  <a name="running"></a>
+## JeDi output  <a name="output"></a>
 The final outputs from JeDi are at:
 ```
 /my_path/my_directory/JeDi/06-genomic_diversity/genomic_*.tsv
@@ -143,7 +145,7 @@ JeDi employs [piawk](https://github.com/novikovalab/piawka), all credits to its 
 
 
 ---------------------------------------------------------------------------
-## Contact
+## Contact <a name="contact"></a>
 Do not hesitate to contact us if you have any questions. We are happy to help!
 - Diana A. Robledo-Ruiz, diana.robledoruiz1@monash.edu
 - Jesús Castrejón-Figueroa, j.castrejon@unsw.edu.au
