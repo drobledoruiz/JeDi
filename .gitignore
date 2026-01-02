@@ -1,12 +1,74 @@
-module_1/00-data/*
-module_1/00-reads/*
-module_1/01-gstacks/*
-module_1/02-bcftools_call/*
-module_1/03-vcftools_filter/*
-module_1/04-bcftools_merge/*
-module_1/05-python_filter/*
-module_2/06-genomic_diversity/*
-module_1/logs/*
-module_2/logs/*
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.hypothesis/
+
+# Build & CI
 .snakemake/
+.github/workflows/*.log
+
+# Logs
 *.log
+logs/
+
+# Analysis outputs (generated, not tracked)
+sample_analysis/00-data/
+sample_analysis/00-reads/
+sample_analysis/01-gstacks/
+sample_analysis/02-bcftools_call/
+sample_analysis/03-vcftools_filter/
+sample_analysis/04-bcftools_merge/
+sample_analysis/05-python_filter/
+sample_analysis/06-genomic_diversity/
+sample_analysis/logs/
+sample_analysis/.snakemake/
+
+population_analysis/06-genomic_diversity/
+population_analysis/logs/
+population_analysis/.snakemake/
+
+# Docker
+.dockerignore
+

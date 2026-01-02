@@ -1,0 +1,30 @@
+import os
+import glob
+
+# Load config
+configfile: "../config.yaml"
+
+# Get input/output directories from config (can be overridden via command line)
+input_dir = config.get('input_dir', os.path.abspath('../test_data'))
+output_dir = config.get('output_dir', os.getcwd())
+sample_output = config.get('sample_output', input_dir + '_jedi_output/sample_analysis')
+
+# Change to output directory for all operations
+os.chdir(output_dir)
+
+# Use the population index file from sample_analysis output (which has corrected SM tags)
+# This ensures the sample IDs match those in the VCF file
+pop_kept = f"{sample_output}/00-data/pop_index.txt"
+
+# Update config with discovered paths
+config['pop_kept'] = pop_kept
+config['sample_analysis_bed'] = f"{sample_output}/{config['fasta2bed']['dir_stacks']}catalog_sorted_merged.bed"
+config['sample_analysis_vcf'] = f"{sample_output}/{config['python_filter']['output_dir']}all_merged_filtered.vcf.gz"
+
+# Load rules
+include: "rules/08_piawka_pi.smk"
+
+#######################################################################################
+rule all:
+	input:
+		config['piawka_agg']['output_dir']  + 'genomic_pi_table.tsv',

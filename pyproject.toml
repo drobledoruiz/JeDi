@@ -1,0 +1,37 @@
+[project]
+name = "jedi"
+version = "1.0.0"
+description = "A Snakemake pipeline to calculate unbiased genetic diversity metrics: individual heterozygosity, population nucleotide diversity (π) and populations sequence divergence (dxy)"
+authors = [{name = "drobledoruiz"}]
+license = {text = "LICENSE"}
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "snakemake>=8.4.4",
+    "polars",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7",
+    "pytest-cov>=4",
+    "pyyaml>=6",
+    "ruff>=0.1",
+    "isort>=5",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.uv]
+# Note: Non-Python dependencies (stacks, bcftools, vcftools, samtools, bedtools, mawk, graphviz, piawka)
+# should be installed separately using conda, mamba, or system package managers

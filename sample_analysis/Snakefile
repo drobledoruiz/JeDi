@@ -1,0 +1,151 @@
+import os
+import glob
+
+# Load config
+configfile: "../config.yaml"
+
+# Get input/output directories from config (can be overridden via command line)
+input_dir = config.get('input_dir', os.path.abspath('../test_data'))
+output_dir = config.get('output_dir', os.getcwd())
+
+# Change to output directory for all operations
+os.chdir(output_dir)
+
+# Find reference genome (*.fa or *.fasta)
+ref_genome_candidates = glob.glob(f"{input_dir}/*.fa") + glob.glob(f"{input_dir}/*.fasta")
+if not ref_genome_candidates:
+	raise ValueError(f"No reference genome (.fa/.fasta) found in {input_dir}")
+ref_genome = ref_genome_candidates[0]
+
+# Find population index file (id_pop*.txt or population*.txt)
+pop_index_candidates = (
+	glob.glob(f"{input_dir}/id_pop*.txt") + 
+	glob.glob(f"{input_dir}/population*.txt") +
+	glob.glob(f"{input_dir}/*_pop*.txt")
+)
+if not pop_index_candidates:
+	raise ValueError(f"No population file (id_pop*.txt) found in {input_dir}")
+pop_index = pop_index_candidates[0]
+
+# Extract sample IDs from population file and map to existing BAMs
+os.makedirs("00-data", exist_ok=True)
+
+# Discover available BAM basenames in input_dir
+available_bams = {os.path.splitext(os.path.basename(p))[0] for p in glob.glob(f"{input_dir}/*.bam")}
+
+# Build normalized ID list by reading first column from pop_index
+# Match sample IDs from popfile to BAM files, and extract SM tags from BAMs for final popmap
+import subprocess
+
+def get_bam_sample_name(bam_path):
+	"""Extract SM tag from BAM @RG header"""
+	try:
+		result = subprocess.run(
+			['samtools', 'view', '-H', bam_path],
+			capture_output=True, text=True, check=True
+		)
+		for line in result.stdout.split('\n'):
+			if line.startswith('@RG'):
+				for field in line.split('\t'):
+					if field.startswith('SM:'):
+						return field[3:]
+	except:
+		pass
+	return None
+
+bams = []
+normalized_popmap_lines = []
+seen_ids = set()
+with open(pop_index, "r", encoding="utf-8", errors="ignore") as f:
+	for raw_line in f:
+		line = raw_line.strip()
+		if not line:
+			continue
+		parts = line.split()
+		first_col = parts[0]
+		group = parts[1] if len(parts) > 1 else ""
+		# Try matching with/without dots to find BAM file
+		candidate_nodot = first_col.replace('.', '')
+		candidate = None
+		if candidate_nodot in available_bams:
+			candidate = candidate_nodot
+		elif first_col in available_bams:
+			candidate = first_col
+		# If not found but ends with '2', try without trailing '2'
+		elif candidate_nodot.endswith('2'):
+			trimmed = candidate_nodot[:-1]
+			if trimmed in available_bams:
+				candidate = trimmed
+		
+		if candidate and candidate in available_bams:
+			if candidate not in seen_ids:
+				# Get actual SM tag from BAM file
+				bam_path = f"{input_dir}/{candidate}.bam"
+				sm_tag = get_bam_sample_name(bam_path)
+				if sm_tag:
+					# Store both the BAM filename and SM tag
+					bams.append((candidate, sm_tag))
+					normalized_popmap_lines.append(f"{sm_tag}\t{group}")
+					seen_ids.add(candidate)
+				else:
+					print(f"Warning: Could not extract SM tag from {bam_path}")
+		else:
+			print(f"Warning: Skipping sample without BAM: {first_col}")
+
+# De-duplicate and sort (keep unique by BAM filename)
+bams_dict = {bam_file: sm for bam_file, sm in bams}
+
+# Persist normalized IDs to id.txt for downstream rules
+with open('00-data/id.txt', 'w') as idf:
+	for bam_file, sm in bams:
+		idf.write(f"{bam_file}\n")
+
+# Write normalized popmap and point config to it
+norm_popmap_path = os.path.abspath('00-data/pop_index.txt')
+with open(norm_popmap_path, 'w') as pf:
+	pf.write("\n".join(normalized_popmap_lines) + ("\n" if normalized_popmap_lines else ""))
+
+# Create symlinks to BAM files using SM tag names
+os.makedirs("00-reads", exist_ok=True)
+for bam_file, sm_tag in bams:
+	obam = f'{input_dir}/{bam_file}.bam'
+	sbam = f'00-reads/{sm_tag}.bam'
+	if not os.path.exists(obam):
+		print(f"Warning: BAM file not found: {obam}")
+		print(f"Available BAM files in {input_dir}:")
+		for bam in glob.glob(f"{input_dir}/*.bam"):
+			print(f"  - {os.path.basename(bam)}")
+		# Skip missing BAM (should not occur due to filtering above)
+		continue
+	if not os.path.islink(sbam):
+		os.symlink(obam, sbam)
+
+# Create bams list with SM tags for use in wildcards
+bams_list = [sm_tag for _, sm_tag in bams]
+
+# Update config with discovered paths
+config['ref_genome'] = ref_genome
+config['pop_index'] = norm_popmap_path
+# Ensure script paths resolve from workspace, not output_dir
+config['fasta2bed']['dir_script'] = '/workspace/sample_analysis/scripts/'
+config['reads_dir'] = input_dir
+
+# Make bams available to rules (using SM tags as identifiers)
+bams = bams_list
+
+# Load rules
+include: "rules/00_prepare_reference.smk"
+include: "rules/00_samtools_index.smk"
+include: "rules/01_gstacks.smk"
+include: "rules/01_fasta2bed.smk"
+include: "rules/02_bcftools_call.smk"
+include: "rules/03_vcftools_filter.smk"
+include: "rules/04_bcftools_sort.smk"
+include: "rules/05_bcftools_merge.smk"
+include: "rules/06_python_filter.smk"
+include: "rules/07_piawka_het.smk"
+
+#######################################################################################
+rule all:
+	input:
+		config['piawka_agg']['output_dir']  + 'genomic_het_table.tsv'

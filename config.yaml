@@ -1,7 +1,7 @@
-ref_genome: "/path_to_reference_genome/reference.fasta"
-pop_index: "/path_to_population_index/id_pop.txt"
-reads_dir: "/path_to_directory_with_reads/"
-pop_kept: "../module_2/06-genomic_diversity/ids_kept.tsv"
+ref_genome: "/workspace/test_data/reference.fa"
+pop_index: "/workspace/test_data/id_pop_subset_dot.txt"
+reads_dir: "/workspace/test_data/"
+pop_kept: "/workspace/test_data/id_pop_subset_dot.txt"
 threads: 4
 gstacks:
   input_dir: "00-reads/"

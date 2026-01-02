@@ -1,0 +1,11 @@
+services:
+  jedi:
+    build: .
+    container_name: jedi-pipeline
+    volumes:
+      - .:/workspace
+      - ./test_data:/workspace/test_data
+    working_dir: /workspace
+    command: /bin/bash
+    stdin_open: true
+    tty: true

@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint:
+    name: Lint and Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          version: "latest"
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      
+      - name: Sync dependencies
+        run: uv sync --all-groups
+      
+      - name: Lint with ruff
+        run: uv run ruff check sample_analysis population_analysis tests
+      
+      - name: Check import order with isort
+        run: uv run isort --check-only sample_analysis population_analysis tests
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          version: "latest"
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      
+      - name: Sync dependencies
+        run: uv sync --all-groups
+      
+      - name: Run tests with coverage
+        run: uv run --group dev pytest -q --cov=sample_analysis/scripts --cov=population_analysis/scripts --cov-report=term-missing
+      
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        if: always()
+        with:
+          files: ./coverage.xml

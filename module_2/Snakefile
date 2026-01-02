@@ -1,9 +1,0 @@
-configfile: "../config.yaml"
-
-# Load rules
-include: "rules/08-piawka_pi.smk"
-
-#######################################################################################
-rule all:
-	input:
-		config['piawka_agg']['output_dir']  + 'genomic_pi_table.tsv',
