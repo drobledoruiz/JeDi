@@ -22,7 +22,7 @@ A Snakemake pipeline to calculate unbiased genetic diversity metrics: individual
 ## REQUIREMENTS  <a name="requirements"></a>
 **mamba** needs to be installed to run *JeDi*, however any other conda implementation such as micromamba or miniconda also work. We recommend installing mamba through [Miniforge](https://github.com/conda-forge/miniforge).
 
-### Unix-like platforms (Mac OS & Linux)
+### Linux (x86) platforms
 Download the installer using 'curl' or 'wget' (or your favorite program) and run the script:
 ```
 curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"    
@@ -35,14 +35,9 @@ Check that mamba was installed correctly by running:
 mamba --help   
 ```
 
-### Windows
+### Windows and MacOs (Not supported)
 
-Download and execute the Windows installer. Follow the prompts, taking note of the options to
-"Create start menu shortcuts" and "Add Miniforge3 to my PATH environment variable". The latter is
-not selected by default due to potential conflicts with other software. Without Miniforge3 on the
-path, the most convenient way to use the installed software (such as commands `conda` and `mamba`)
-will be via the "Miniforge Prompt" installed to the start menu.
-
+Please note that these operating systems are currently not supported.
 
 
 
