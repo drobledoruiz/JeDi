@@ -5,13 +5,22 @@
 					|  '--'  | |  \____  |  '--'  | |  | 
 	 				 \______/   \_____/  |_______/  |__| 
                                     
-A Snakemake pipeline to calculate unbiased genetic diversity metrics: individual heterozygosity, population nucleotide diversity (π) and populations sequence divergence (dxy). *JeDi* avoids common pitfalls that lead to biased genetic diversity estimates (e.g., it keeps and accounts for tri- and tetra-allelic sites and invariant [monomorphic] sites, which is essential for the correct computation of π and dxy).
+A Snakemake pipeline to calculate unbiased genetic diversity metrics: individual heterozygosity, population nucleotide diversity (π) and populations sequence divergence (Dxy). *JeDi* avoids common pitfalls that lead to biased genetic diversity estimates (e.g., it keeps and accounts for tri- and tetra-allelic sites and invariant [monomorphic] sites, which is essential for the correct computation of π and Dxy).
+<br>
+
+<img width="6622" height="9362" alt="Poster_JeDi" src="https://github.com/user-attachments/assets/8d1324f1-fa58-428f-9ffc-8ae4d4f90384" />
+<br>
+<br>
+<br>
 
 1. [Requirements](#requirements)
 2. [Installation](#installation)
 3. [Running JeDi](#running)
 4. [JeDi output](#output)
 5. [Citation](#citation)
+
+<br>
+<br>
 
 <p align="center">
 <img src="JeDi_pipeline_v2.png" width="400" height="714" />
