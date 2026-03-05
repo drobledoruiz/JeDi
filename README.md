@@ -209,7 +209,7 @@ You can find intermediate outputs in the other directories:
 
 ---------------------------------------------------------------------------
 ## CITATION <a name="citation"></a>
-If you use *JeDi*, please cite "Pavlova, et al. A shift to metapopulation genetic management for persistence of a species threatened by fragmentation: the case of an endangered Australian freshwater fish. Authorea. October 04, 2024" [DOI: 10.22541/au.172801777.74141428/v1](https://www.authorea.com/doi/full/10.22541/au.172801777.74141428)
+If you use *JeDi*, please cite: **"Pavlova, et al. (2025) A shift to metapopulation genetic management for persistence of a species threatened by fragmentation: the case of an endangered Australian freshwater fish. *Molecular Ecology* 34 (23), e70005."** [DOI:  https://doi.org/10.1111/mec.70005]
 
 Do not hesitate to contact us if you have any questions. We are happy to help!
 - Diana A. Robledo-Ruiz, diana.robledoruiz1@monash.edu
